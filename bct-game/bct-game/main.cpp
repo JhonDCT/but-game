@@ -62,46 +62,41 @@ void imprimirTurno(bool jugador, int turnoActual) {
 	}
 };
 
-void imprimirDadoCara(int dado) {
-	cout << "-----" << endl;
-
-	for (int i = 1; i <= 3; ++i) {
-		cout << "|"; // -
-		for (int j = 1; j <= 3; ++j) {
-			if (dado == 1 && i == 2 && j == 2) {
-				cout << char(42);// *
-			}
-			else if (dado == 2 && ((i == 1 && j == 3) || (i == 3 && j == 1))) {
-				cout << char(42);// *
-			}
-			else if (dado == 3 && ((i == 1 && j == 3) || (i == 3 && j == 1) || (i == 2 && j == 2))) {
-				cout << char(42);// *
-			}
-			else if (dado == 4 && ((i == 1 && j == 3) || (i == 3 && j == 1) || (i == 1 && j == 1) || (
-				i == 3 && j == 3))) {
-				cout << char(42);// *
-			}
-			else if (dado == 5 && ((i == 1 && j == 3) || (i == 3 && j == 1) || (i == 1 && j == 1) || (
-				i == 3 && j == 3) || (i == 2 && j == 2))) {
-				cout << char(42);// *
-			}
-			else if (dado == 6 && ((i == 1 && j == 3) || (i == 3 && j == 1) || (i == 1 && j == 1) || (
-				i == 3 && j == 3) || (i == 2 && j == 1) || (i == 2 && j == 3))) {
-				cout << char(42); // *
-			}
-			else {
-				cout << char(32);// espacio
-			}
-		}
-		cout << "|"; // - char(45)
-		cout << endl;
-
-		//_sleep(200);
+void imprimirDadoCara(int x, int y, int dado, int color) {
+	if (color != 0) {
+		Console::ForegroundColor = ConsoleColor(color);
 	}
+	else {
+		Console::ForegroundColor = ConsoleColor::White;
+	}
+
+	gotoXY(x, y);
 	cout << "-----";
-	cout << endl;
-	cout << endl;
-};
+
+	gotoXY(x, y + 1);
+	cout << "|";
+	if (dado == 2 || dado == 3) cout << "  *";
+	else if (dado == 4 || dado == 5 || dado == 6) cout << "* *";
+	else cout << "   ";
+	cout << "|";
+
+	gotoXY(x, y + 2);
+	cout << "|";
+	if (dado == 1 || dado == 3 || dado == 5) cout << " * ";
+	else if (dado == 6) cout << "* *";
+	else cout << "   ";
+	cout << "|";
+
+	gotoXY(x, y + 3);
+	cout << "|";
+	if (dado == 2 || dado == 3) cout << "*  ";
+	else if (dado == 4 || dado == 5 || dado == 6) cout << "* *";
+	else cout << "   ";
+	cout << "|";
+
+	gotoXY(x, y + 4);
+	cout << "-----";
+}
 
 void main()
 {
@@ -143,18 +138,23 @@ void main()
 
 				if (turnoActual % 2 != 0)
 				{
+					Console::ForegroundColor = ConsoleColor::White;
 					imprimirTurno(true, turnoActual);
 
 					for (size_t i = 0; i < cantidadDados; i++)
 					{
 						int numero = r.Next(6) + 1;
+						int color = r.Next(10);
 
-						imprimirDadoCara(numero);
+						imprimirDadoCara(8 * (i + 1), 5, numero, color);						
 
 						if (numero == 6)
 						{
 							if (!barcoJugador) {
-								imprimirMensaje("Barco obtenido");
+								gotoXY(0, 12);
+								Console::ForegroundColor = ConsoleColor::Green;
+								imprimirMensaje("Barco obtenido!!");
+								Console::ForegroundColor = ConsoleColor::White;
 							}
 
 							barcoJugador = true;
@@ -163,7 +163,10 @@ void main()
 						if (barcoJugador && numero == 5)
 						{
 							if (!capitanJugador) {
-								imprimirMensaje("Capitan obtenido");
+								gotoXY(0, 12);
+								Console::ForegroundColor = ConsoleColor::Green;
+								imprimirMensaje("Capitan obtenido!!");
+								Console::ForegroundColor = ConsoleColor::White;
 							}
 
 							capitanJugador = true;
@@ -172,7 +175,10 @@ void main()
 						if (barcoJugador && capitanJugador && numero == 4)
 						{
 							if (!tripulacionJugador) {
-								imprimirMensaje("Tripulacion obtenido");
+								gotoXY(0, 12);
+								Console::ForegroundColor = ConsoleColor::Green;
+								imprimirMensaje("Tripulacion obtenido!!");
+								Console::ForegroundColor = ConsoleColor::White;
 							}
 
 							tripulacionJugador = true;
@@ -181,18 +187,23 @@ void main()
 				}
 				else
 				{
+					Console::ForegroundColor = ConsoleColor::White;
 					imprimirTurno(false, turnoActual);
 
 					for (size_t i = 0; i < cantidadDados; i++)
 					{
 						int numero = r.Next(6) + 1;
+						int color = r.Next(10);
 
-						imprimirDadoCara(numero);
+						imprimirDadoCara(8 * (i + 1), 5, numero, color);						
 
 						if (numero == 6)
 						{
 							if (!barcoComputadora) {
-								imprimirMensaje("Barco obtenido");
+								gotoXY(0, 12);
+								Console::ForegroundColor = ConsoleColor::Green;
+								imprimirMensaje("Barco obtenido!!");
+								Console::ForegroundColor = ConsoleColor::White;
 							}
 
 							barcoComputadora = true;
@@ -201,7 +212,10 @@ void main()
 						if (barcoComputadora && numero == 5)
 						{
 							if (!capitanComputadora) {
-								imprimirMensaje("Capitan obtenido");
+								gotoXY(0, 12);
+								Console::ForegroundColor = ConsoleColor::Green;
+								imprimirMensaje("Capitan obtenido!!");
+								Console::ForegroundColor = ConsoleColor::White;
 							}
 
 							capitanComputadora = true;
@@ -210,7 +224,10 @@ void main()
 						if (barcoComputadora && capitanComputadora && numero == 4)
 						{
 							if (!tripulacionComputador) {
-								imprimirMensaje("Tripulacion obtenido");
+								gotoXY(0, 12);
+								Console::ForegroundColor = ConsoleColor::Green;
+								imprimirMensaje("Tripulacion obtenido!!");
+								Console::ForegroundColor = ConsoleColor::White;
 							}
 
 							tripulacionComputador = true;
@@ -222,6 +239,7 @@ void main()
 			}
 			else {
 				Console::Clear();
+				Console::ForegroundColor = ConsoleColor::Red;
 
 				imprimirMensaje("Presiona p para lanzar los dados");
 			}
@@ -231,7 +249,8 @@ void main()
 	if (barcoJugador && capitanJugador && tripulacionJugador && barcoComputadora && capitanComputadora && tripulacionComputador)
 	{
 		Console::Clear();
-
+		Console::ForegroundColor = ConsoleColor::Yellow;
+		
 		imprimirMensaje("Empate");
 
 		system("pause>null");
@@ -240,6 +259,7 @@ void main()
 	if (barcoJugador && capitanJugador && tripulacionJugador)
 	{
 		Console::Clear();
+		Console::ForegroundColor = ConsoleColor::Yellow;
 
 		if (turnoActual < 10) {
 			imprimirMensaje("Jugador ha ganado en el turno: " + to_string(turnoActual));
@@ -252,6 +272,7 @@ void main()
 	if (barcoComputadora && capitanComputadora && tripulacionComputador)
 	{
 		Console::Clear();
+		Console::ForegroundColor = ConsoleColor::Yellow;
 
 		if (turnoActual < 10) {
 			imprimirMensaje("Computadora ha ganado en el turno: " + to_string(turnoActual));
